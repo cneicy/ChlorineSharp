@@ -34,10 +34,10 @@ jobs:
       run: dotnet restore
 
     - name: mkdir
-      run: mkdir ${GITHUB_WORKSPACE}/artifact
+      run: mkdir ./artifact
 
     - name: Build
-      run: dotnet publish ${GITHUB_WORKSPACE}/Antikythera/Antikythera.csproj -c Release -r win-x64 -o ${GITHUB_WORKSPACE}/artifact
+      run: dotnet publish ./Antikythera/Antikythera.csproj -c Release -o ./artifact
 
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2
