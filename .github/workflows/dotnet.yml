@@ -6,7 +6,6 @@ on:
   pull_request:
     branches: [ master ]
 
-
 jobs:
   build:
     strategy:
@@ -34,8 +33,14 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
 
-    - name: Build
-      run: dotnet build --no-restore
+    - name: mkdir
+      run: mkdir ${GITHUB_WORKSPACE}/artifact
 
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+    - name: Build
+      run: dotnet publish ${GITHUB_WORKSPACE}/Antikythera/Antikythera.csproj -c Release -o ${GITHUB_WORKSPACE}/artifact
+
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: Antikythera - ${{ matrix.os }}
+        path: artifact
