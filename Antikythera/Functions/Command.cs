@@ -5,7 +5,12 @@ using Konata.Core.Interfaces.Api;
 using Konata.Core.Message;
 using Konata.Core.Message.Model;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Text.Json;
 
 namespace Antikythera.Functions;
 public static class Command
@@ -26,18 +31,30 @@ public static class Command
 
         var textChain = group.Chain.GetChain<TextChain>();
         if (textChain is null) return;
+        var commands = LoadCommands();
 
         try
         {
             MessageBuilder? reply = null;
+            StringBuilder replyText = new StringBuilder();
+
+            // simple commands
+            foreach (var command in commands)
             {
-                if (textChain.Content.StartsWith("/help"))
-                    reply = OnCommandHelp(textChain);
-                else if (textChain.Content.StartsWith("/ping"))
-                    reply = OnCommandPing(textChain);
-                else if (textChain.Content.StartsWith("/status"))
-                    reply = OnCommandStatus(textChain);
+                if (textChain.Content.StartsWith("/" + command.Key))
+                    foreach (string value in command.Value)
+                        replyText.Append(value);
+                reply = new MessageBuilder().Text(replyText.ToString());
             }
+            // ping/help it
+            if (textChain.Content.StartsWith("/ping"))
+                reply = OnCommandPing();
+            if (textChain.Content.StartsWith("/help"))
+                reply = OnCommandHelp(textChain);
+
+            // complex commands
+            if (textChain.Content.StartsWith("/status"))
+                reply = OnCommandStatus(textChain);
 
             // Send reply message
             if (reply is not null)
@@ -86,11 +103,21 @@ public static class Command
             .Text("Powered by ProjectHDS, Konata.Core and Kagami Project.");
 
     /// <summary>On ping.</summary>
-    /// <param name="chain"></param>
     /// <returns></returns>
-    public static MessageBuilder OnCommandPing(TextChain? chain)
-        => Text("Pong!");
+    public static MessageBuilder OnCommandPing() => Text("Pong!");
 
     private static MessageBuilder Text(string text)
         => new MessageBuilder().Text(text);
+
+    private static Dictionary<string, string[]> LoadCommands()
+    {
+        var commands = new Dictionary<string, string[]>();
+        var path = Path.Join("commands.json");
+        if (File.Exists(path))
+        {
+            var commandsJson = JsonSerializer.Deserialize<Dictionary<string, string[]>>(File.ReadAllText(path));
+            if (commandsJson is not null) return commandsJson;
+        }
+        return commands;
+    }
 }

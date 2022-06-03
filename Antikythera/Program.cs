@@ -35,7 +35,7 @@ public static class Antikythera
                         break;
 
                     default:
-                        case CaptchaEvent.CaptchaType.Unknown:
+                    case CaptchaEvent.CaptchaType.Unknown:
                         break;
                 }
             };

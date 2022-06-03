@@ -14,6 +14,6 @@ public class Poke
         if (group.MemberUin != bot.Uin) return;
 
         // Poke equals to a ping command.
-        bot.SendGroupMessage(group.GroupUin, Command.OnCommandPing(null));
+        bot.SendGroupMessage(group.GroupUin, Command.OnCommandPing());
     }
 }
