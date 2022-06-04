@@ -42,9 +42,11 @@ public static class Command
             foreach (var command in commands)
             {
                 if (textChain.Content.StartsWith("/" + command.Key))
+                {
                     foreach (string value in command.Value)
                         replyText.Append(value);
-                reply = new MessageBuilder().Text(replyText.ToString());
+                    reply = new MessageBuilder(replyText.ToString());
+                }
             }
             // ping/help it
             if (textChain.Content.StartsWith("/ping"))
