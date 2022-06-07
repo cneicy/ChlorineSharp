@@ -2,17 +2,10 @@
 
 using Konata.Core;
 using Konata.Core.Events.Model;
-using Konata.Core.Interfaces.Api;
 using Konata.Core.Message;
-using Konata.Core.Message.Model;
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace Antikythera.Functions;
 
