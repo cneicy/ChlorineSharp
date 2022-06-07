@@ -50,7 +50,8 @@ public class Commands
         var month = date.Month;
         var day = date.Day;
         year |= day;
-        var seed = int.MaxValue / 2 - (month | year);
+        var qq = evt.MemberUin;
+        var seed = int.MaxValue / 2 - (month | year) + (int)qq;
         var random = new Random(seed);
         var rp = random.Next(0, 100);
         return new MessageBuilder().Text($"{evt.MemberCard} 的今日人品为：{rp}");
