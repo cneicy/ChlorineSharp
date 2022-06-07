@@ -8,9 +8,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace Antikythera.Functions;
 public static class Command
@@ -57,6 +57,8 @@ public static class Command
             // complex commands
             if (textChain.Content.StartsWith("/status"))
                 reply = OnCommandStatus(textChain);
+            if (textChain.Content.StartsWith("/jrrp"))
+                reply = await OnCommandJrrp(bot, group);
 
             // Send reply message
             if (reply is not null)
@@ -108,6 +110,17 @@ public static class Command
     /// <returns></returns>
     public static MessageBuilder OnCommandPing() => Text("Pong!");
 
+    /// <summary>
+    /// Get jrrp.
+    /// </summary>
+    /// <param name="bot">bot instance</param>
+    /// <param name="group">group event</param>
+    /// <returns></returns>
+    public static async Task<MessageBuilder> OnCommandJrrp(Bot bot, GroupMessageEvent group)
+    {
+        //TODO: Jrrp;
+        return new MessageBuilder().Text("");
+    }
     private static MessageBuilder Text(string text)
         => new MessageBuilder().Text(text);
 
