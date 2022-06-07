@@ -1,13 +1,16 @@
 ﻿using Antikythera.Functions;
+
 using Konata.Core;
 using Konata.Core.Common;
 using Konata.Core.Events.Model;
 using Konata.Core.Interfaces;
 using Konata.Core.Interfaces.Api;
+
 using System;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Serilog;
 
 namespace Antikythera;
 
@@ -17,9 +20,24 @@ public static class Antikythera
 
     public static async Task Main()
     {
+        Log.Logger = new LoggerConfiguration()
+            .Enrich.FromLogContext()
+            .MinimumLevel.Information()
+            .WriteTo.Console()
+            .WriteTo.File("log.log", rollingInterval: RollingInterval.Day, retainedFileCountLimit: null, flushToDiskInterval: new TimeSpan(0, 0, 5)).CreateLogger();
+        var commandRouter = new CommandRouter<Commands>();
+        var templateReply = new TemplateReply();
+
         _bot = BotFather.Create(GetConfig(), GetDevice(), GetKeyStore());
         {
-            _bot.OnLog += (s, e) => Console.WriteLine(e.EventMessage);
+            _bot.OnLog += (s, e) => Log.Logger.Debug(e.EventMessage);
+            _bot.OnGroupMessage += (s, e) => Log.Logger.Information("[{0}({1})] {2}({3}) -> {4}({5}): {6}", s.Name, s.Uin, e.MemberCard, e.MemberUin, e.GroupName, e.GroupUin, e.Chain.ToString().Replace("\n", "\\n").Replace("\r", "\\r"));
+            _bot.OnFriendMessage += (s, e) => Log.Logger.Information("[{0}({1})] ({2}) -> {3}({4}): {5}", s.Name, s.Uin, e.Message.Sender.Uin, s.Name, s.Uin, e.Chain.ToString().Replace("\n", "\\n").Replace("\r", "\\r"));
+            _bot.OnBotOnline += (s, e) => Log.Logger.Information("[STATUS][{0}({1})] connected.", s.Name, s.Uin);
+            _bot.OnBotOffline += (s, e) => Log.Logger.Information("[STATUS][{0}({1})] disconnected.", s.Name, s.Uin);
+            _bot.OnGroupMessageRecall += (s, e) => Log.Logger.Information("[RECALL][({0})] [({1})] recall a message of [({2})]", e.GroupUin, e.OperatorUin, e.AffectedUin);
+            _bot.OnFriendMessage += (s, e) => Log.Logger.Information("[RECALL][({0})] message [({1})] was recalled.", e.FriendUin, e.Chain.ToString().Replace("\n", "\\n").Replace("\r", "\\r"));
+            //_bot.OnLog += (s, e) => Console.WriteLine(e.EventMessage);
             _bot.OnCaptcha += (s, e) =>
             {
                 switch (e.Type)
@@ -40,8 +58,15 @@ public static class Antikythera
                 }
             };
 
-            _bot.OnGroupPoke += Poke.OnGroupPoke;
-            _bot.OnGroupMessage += Command.OnGroupMessage;
+            _bot.OnGroupMessage += async (s, e) =>
+            {
+                var reply = await templateReply.GetReply(s, e);
+                if (reply)
+                {
+                    return;
+                }
+                await commandRouter.Invoke(s, e);
+            };
         }
 
         var result = await _bot.Login();
