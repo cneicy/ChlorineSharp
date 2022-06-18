@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32519.111
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Antikythera", "Antikythera\Antikythera.csproj", "{98089339-94FB-4BEC-A06C-24818B830CD9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChlorineSharp", "ChlorineSharp\ChlorineSharp.csproj", "{98089339-94FB-4BEC-A06C-24818B830CD9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

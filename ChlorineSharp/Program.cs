@@ -1,6 +1,4 @@
-﻿using Antikythera.Functions;
-
-using Konata.Core;
+﻿using Konata.Core;
 using Konata.Core.Common;
 using Konata.Core.Events.Model;
 using Konata.Core.Interfaces;
@@ -10,11 +8,12 @@ using System;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
+using ChlorineSharp.Functions;
 using Serilog;
 
-namespace Antikythera;
+namespace ChlorineSharp;
 
-public static class Antikythera
+public static class ChlorineSharp
 {
     private static Bot _bot = null!;
 
@@ -31,6 +30,7 @@ public static class Antikythera
         _bot = BotFather.Create(GetConfig(), GetDevice(), GetKeyStore());
         {
             _bot.OnLog += (s, e) => Log.Logger.Debug(e.EventMessage);
+            _bot.OnGroupMemberIncrease += (s, e) => Log.Logger.Information($"{s.Name} {s.Uin} joined.");
             _bot.OnGroupMessage += (s, e) => Log.Logger.Information("[{0}({1})] {2}({3}) -> {4}({5}): {6}", s.Name, s.Uin, e.MemberCard, e.MemberUin, e.GroupName, e.GroupUin, e.Chain.ToString().Replace("\n", "\\n").Replace("\r", "\\r"));
             _bot.OnFriendMessage += (s, e) => Log.Logger.Information("[{0}({1})] ({2}) -> {3}({4}): {5}", s.Name, s.Uin, e.Message.Sender.Uin, s.Name, s.Uin, e.Chain.ToString().Replace("\n", "\\n").Replace("\r", "\\r"));
             _bot.OnBotOnline += (s, e) => Log.Logger.Information("[STATUS][{0}({1})] connected.", s.Name, s.Uin);
@@ -66,6 +66,11 @@ public static class Antikythera
                     return;
                 }
                 await commandRouter.Invoke(s, e);
+            };
+
+            _bot.OnGroupMemberIncrease += async (s, e) =>
+            {
+                await Welcome.OnJoin(s, e);
             };
         }
 

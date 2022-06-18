@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace Antikythera.Utils;
+namespace ChlorineSharp.Utils;
 
 public static class Utils
 {

@@ -12,7 +12,7 @@ using Konata.Core.Message.Model;
 
 using Serilog;
 
-namespace Antikythera;
+namespace ChlorineSharp;
 
 public class CommandRouter<T>
 {

@@ -1,23 +1,31 @@
-﻿using Antikythera.Utils;
-
-using Konata.Core;
+﻿using Konata.Core;
 using Konata.Core.Events.Model;
 using Konata.Core.Message;
 
 using System;
 using System.Diagnostics;
+using ChlorineSharp.Utils;
 
-namespace Antikythera.Functions;
+namespace ChlorineSharp.Functions;
 
 public class Commands
 {
     [Command(CommandType.Common, "/help")]
     private MessageBuilder? OnCommandHelp()
         => new MessageBuilder()
-            .Text("[Antikythera Help]\n")
-            .Text("/ping\n Pong!\n\n")
-            .Text("/help\n 打印本帮助消息。\n\n")
-            .Text("/status\n 显示 Bot 状态。\n\n");
+            .Text("[ChlorineSharp Help]\n\n")
+            .Text("/info\n   显示Bot资料\n")
+            .Text("/help\n   显示Bot帮助信息\n")
+            .Text("/jrrp\n   今日人品\n")
+            .Text("/ask\n   教你提问\n")
+            .Text("/pastebin\n   PasteBin使用方法\n")
+            .Text("/log\n   log相关\n")
+            .Text("/rules\n   显示群规\n")
+            .Text("/crtcmds\n   CraftTweaker 部分常用指令使用方法\n")
+            .Text("/mtcmds\n   MineTweaker 部分常用指令使用方法\n")
+            .Text("/whyvsc\n   为什么要使用 VisualStudio Code?\n")
+            .Text("/links\n   实用链接\n")
+            .Text("/status\n   显示 Bot 状态。");
 
     [Command(CommandType.Status, "/status")]
     private MessageBuilder? OnCommandStatus(BotStatus stat)
