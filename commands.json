@@ -12,7 +12,7 @@
   "info": [
     "ChlorineSharp, rebirth from BakaHDT(https://github.com/bingling-sama/BakaHDT)。\n",
     "Powered by ProjectHDS, Konata.Core and Kagami Project.\n",
-    "项目地址: https://github.com/GBLodb/ChlorineSharp\n"
+    "项目地址: https://github.com/GBLodb/ChlorineSharp"
   ],
   "ask": [
     "提问前须知:\n",
@@ -34,7 +34,7 @@
     "游戏日志(latest.log) - \".minecraft/logs/latest.log\"。\n",
     "游戏调试日志(debug.log) - \".minecraft/logs/debug.log\"。\n",
     "CraftTweaker日志文件(crtlog) - \".minecraft/crafttweaker.log\"。\n",
-    "MineTweaker日志文件(mtlog) - \".minecraft/minetweaker.log\"。\n"
+    "MineTweaker日志文件(mtlog) - \".minecraft/minetweaker.log\"。"
   ],
   "rules" : [
     "《Minecraft魔改交流群 群规》请熟读并背诵()\n",
