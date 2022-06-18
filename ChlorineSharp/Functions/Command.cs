@@ -4,6 +4,8 @@ using Konata.Core.Message;
 
 using System;
 using System.Diagnostics;
+using System.Text;
+using System.Text.RegularExpressions;
 using ChlorineSharp.Utils;
 
 namespace ChlorineSharp.Functions;
@@ -54,14 +56,22 @@ public class Commands
     private MessageBuilder? OnCommandJrrp(Bot bot, GroupMessageEvent evt)
     {
         var date = new DateTimeOffset(DateTime.Now).LocalDateTime;
-        var year = date.Year;
-        var month = date.Month;
-        var day = date.Day;
-        year |= day;
-        var qq = evt.MemberUin;
-        var seed = int.MaxValue / 2 - (month | year) + (int)qq;
+        var salt = "\\u5496\\u55b1";
+        var year = date.Year.ToString();
+        var month = date.Month.ToString();
+        var day = date.Day.ToString();
+        year += salt;
+        day += salt;
+        var bytes = Encoding.UTF8.GetBytes($"{month}+{year}+{day}+{Regex.Unescape(salt)}");
+        int seed = 1;
+        foreach (var b in bytes)
+        {
+            seed += (int)b;
+        }
+
+        seed += (int)evt.MemberUin;
         var random = new Random(seed);
-        var rp = random.Next(0, 100);
-        return new MessageBuilder().Text($"{evt.MemberCard} 的今日人品为：{rp}");
+        var rp = Math.Floor((Math.Round(new GaussianRng(seed).Next(), 2) * 100) + 0.1);
+        return new MessageBuilder().At(evt.MemberUin).Text($"的今日人品为：{rp}");
     }
 }
