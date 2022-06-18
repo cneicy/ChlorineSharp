@@ -37,10 +37,10 @@ jobs:
       run: mkdir ./artifact
 
     - name: Build
-      run: dotnet publish ./Antikythera/Antikythera.csproj -c Release -o ./artifact
+      run: dotnet publish ./ChlorineSharp/ChlorineSharp.csproj -c Release -o ./artifact
 
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2
       with:
-        name: Antikythera - ${{ matrix.os }}
+        name: ChlorineSharp - ${{ matrix.os }}
         path: artifact
